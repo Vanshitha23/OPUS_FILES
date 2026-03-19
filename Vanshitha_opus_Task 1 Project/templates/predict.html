@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>🧪 Health Prediction</h2>
+
+    <div class="user-info">
+        👤 {{ user.name }} | 🎂 {{ user.age }} | ⚧ {{ user.gender }}
+    </div>
+
+    <form id="predictForm">
+
+        <input type="number" id="preg" placeholder="Pregnancies" required>
+        <input type="number" id="glucose" placeholder="Glucose Level" required>
+        <input type="number" id="bp" placeholder="Blood Pressure" required>
+        <input type="number" id="skin" placeholder="Skin Thickness" required>
+        <input type="number" id="insulin" placeholder="Insulin Level" required>
+        <input type="number" step="0.1" id="bmi" placeholder="BMI" required>
+        <input type="number" step="0.01" id="dpf" placeholder="DPF" required>
+        <input type="number" id="age_input" placeholder="Age" required>
+
+        <button type="submit">Predict 🔍</button>
+    </form>
+
+    <div id="resultBox" class="result"></div>
+
+</div>
+
+<script>
+document.getElementById("predictForm").onsubmit = async function(e) {
+    e.preventDefault();
+
+    const features = [
+        Number(document.getElementById("preg").value),
+        Number(document.getElementById("glucose").value),
+        Number(document.getElementById("bp").value),
+        Number(document.getElementById("skin").value),
+        Number(document.getElementById("insulin").value),
+        Number(document.getElementById("bmi").value),
+        Number(document.getElementById("dpf").value),
+        Number(document.getElementById("age_input").value)
+    ];
+
+    const response = await fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: "{{ user.name }}",
+            age: "{{ user.age }}",
+            gender: "{{ user.gender }}",
+            features: features
+        })
+    });
+
+    const data = await response.json();
+    const box = document.getElementById("resultBox");
+
+    if (data.result) {
+        box.innerText = data.result;
+
+        if (data.result === "Diabetic") {
+            box.className = "result danger";
+        } else {
+            box.className = "result success";
+        }
+
+    } else {
+        box.innerText = "Error: " + data.error;
+        box.className = "result danger";
+    }
+};
+</script>
+
+</body>
+</html>
