@@ -11,7 +11,7 @@ app = Flask(__name__)
 # =========================
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Prakash@27'
+app.config['MYSQL_PASSWORD'] = '*******'
 app.config['MYSQL_DB'] = 'healthcare'   # your DB name
 
 mysql = MySQL(app)
